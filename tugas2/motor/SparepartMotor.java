@@ -108,7 +108,7 @@ public class SparepartMotor extends JFrame {
         add(simpanButton);
 
         // Tabel untuk menampilkan data sparepart
-        String[] columnNames = { "Nama", "Deskripsi", "Status", "Kondisi", "Kategori", "Merek", "Harga", "Stok"};
+        String[] columnNames = { "Nama","Jumlah" , "Deskripsi", "Status", "Kondisi", "Kategori", "Merek", "Harga", "Stok"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(table);
@@ -153,7 +153,7 @@ public class SparepartMotor extends JFrame {
         }
 
         // Tambah data ke tabel
-        tableModel.addRow(new Object[]{nama, deskripsi, status, kondisi, kategori, merek, harga, stok});
+        tableModel.addRow(new Object[]{nama, jumlah, deskripsi, status, kondisi, kategori, merek, harga, stok});
 
         JOptionPane.showMessageDialog(this, "Data sparepart berhasil disimpan!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
