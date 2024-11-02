@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,13 +15,15 @@ public class FormPendaftaran extends JFrame {
     private JPasswordField passwordField, confirmPasswordField;
     private ButtonGroup genderGroup;
     private JSpinner.DateEditor dateEditor;
+    private JTable table;
+    private DefaultTableModel tableModel;
 
     public FormPendaftaran() {
         setTitle("Form Pendaftaran Nasabah");
-        setSize(500, 600);
+        setSize(700, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(11, 1));
+        setLayout(new GridLayout(12, 1));
 
         // Panel untuk Nama
         JPanel panelNama = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -43,7 +46,7 @@ public class FormPendaftaran extends JFrame {
         JLabel jenisKelaminLabel = new JLabel("Jenis Kelamin:");
         lakiLakiButton = new JRadioButton("Laki-Laki");
         perempuanButton = new JRadioButton("Perempuan");
-        genderGroup = new ButtonGroup(); // Deklarasi dan inisialisasi genderGroup
+        genderGroup = new ButtonGroup(); 
         genderGroup.add(lakiLakiButton);
         genderGroup.add(perempuanButton);
         panelJenisKelamin.add(jenisKelaminLabel);
@@ -116,6 +119,13 @@ public class FormPendaftaran extends JFrame {
         resultArea.setEditable(false);
         add(new JScrollPane(resultArea));
 
+        // Tabel untuk menampilkan data
+        String[] columnNames = {"Nama", "Nomor HP", "Jenis Kelamin", "WNA", "Jenis Tabungan", "Frekuensi", "Tanggal Lahir"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(table);
+        add(tableScrollPane);
+
         // Menu bar
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
@@ -142,7 +152,15 @@ public class FormPendaftaran extends JFrame {
         String confirmPassword = new String(confirmPasswordField.getPassword());
         Date tanggalLahir = (Date) tanggalLahirSpinner.getValue();
 
-        String passwordStatus = password.equals(confirmPassword) ? "Password cocok" : "Password tidak cocok";
+        if (!password.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Password tidak cocok!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Tambah data ke tabel
+        tableModel.addRow(new Object[]{
+                nama, nomorHP, jenisKelamin, wna, (jenisTabungan != null ? jenisTabungan : "Tidak dipilih"), frekuensi, dateEditor.getFormat().format(tanggalLahir)
+        });
 
         String result = "Nama\t\t: " + nama + "\n" +
                         "Nomor HP\t: " + nomorHP + "\n" +
@@ -151,7 +169,6 @@ public class FormPendaftaran extends JFrame {
                         "Jenis Tabungan\t: " + (jenisTabungan != null ? jenisTabungan : "Tidak dipilih") + "\n" +
                         "Frekuensi Transaksi: " + frekuensi + "\n" +
                         "Tanggal Lahir\t: " + dateEditor.getFormat().format(tanggalLahir) + "\n" +
-                        "Password Status\t: " + passwordStatus + "\n" +
                         "========================================\n";
 
         resultArea.setText(result);
